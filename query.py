@@ -113,4 +113,3 @@ if __name__ == "__main__":
     query_stock(args.s)
    # send_telegram()
   #  cut_data_gold()
-  query_coin(token)
