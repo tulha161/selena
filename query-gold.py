@@ -9,8 +9,8 @@ import json
 parser = argparse.ArgumentParser( prog = 'query_data' , 
                                   description= 'to query data on web')
 
-#parser.add_argument('url', help='url of web')
-parser.add_argument('-c', help="token to query" )
+parser.add_argument('url', help='url of web')
+
 
 time_now = time.ctime()
 
@@ -34,18 +34,15 @@ def query_data(url):
     body_to_json = html_to_json.convert(body)
     return body_to_json
 
-def query_coin(token):
-    key = "https://api.binance.com/api/v3/ticker/price?symbol={}USDT".format(token.upper())
+def query_btc():
+    key = "https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT"
     data = requests.get(key)  
     data = data.json()
     data['Time'] = time_now
-    data["price_{}".format(token)] = data.pop('price')
-    data["price_{}".format(token)] = float(data["price_{}".format(token)])
+    data['price_btc'] = data.pop('price')
+    data['price_btc'] = float(data['price_btc'])
     data = json.dumps(data)
-    ##write it down
-    f = open ("data-{}".format(token), "w")
-    f.write(data)
-    f.close
+    print (data)
     return data
 
 
@@ -69,9 +66,12 @@ def cut_data_gold():
     final_data["Vang_mieng" + "_sell"] = float(jsc[2]['_value'])
 
 
-    print (json.dumps(final_data))
-
-    return json.dumps(final_data)
+    final_data = json.dumps(final_data)
+    ## write to file
+    f = open ("data-gold", "w")
+    f.write(final_data)
+    f.close
+    return final_data
 
 
 
@@ -91,9 +91,7 @@ def send_telegram():
 
 
 if __name__ == "__main__":
-  args = parser.parse_args()
+ #   args = parser.parse_args()
+    
  #  url = args.url
-  token = args.c
-   # send_telegram()
-  #  cut_data_gold()
-  query_coin(token)
+    cut_data_gold()

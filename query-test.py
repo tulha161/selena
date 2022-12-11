@@ -9,8 +9,8 @@ import json
 parser = argparse.ArgumentParser( prog = 'query_data' , 
                                   description= 'to query data on web')
 
-#parser.add_argument('url', help='url of web')
-parser.add_argument('-c', help="token to query" )
+parser.add_argument('url', help='url of web')
+
 
 time_now = time.ctime()
 
@@ -42,10 +42,7 @@ def query_coin(token):
     data["price_{}".format(token)] = data.pop('price')
     data["price_{}".format(token)] = float(data["price_{}".format(token)])
     data = json.dumps(data)
-    ##write it down
-    f = open ("data-{}".format(token), "w")
-    f.write(data)
-    f.close
+    print (data)
     return data
 
 
@@ -91,9 +88,9 @@ def send_telegram():
 
 
 if __name__ == "__main__":
-  args = parser.parse_args()
+ #   args = parser.parse_args()
+    
  #  url = args.url
-  token = args.c
    # send_telegram()
   #  cut_data_gold()
-  query_coin(token)
+  query_btc()
