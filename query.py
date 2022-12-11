@@ -6,11 +6,14 @@ import argparse
 import requests
 import time
 import json
+import vnstock
+
 parser = argparse.ArgumentParser( prog = 'query_data' , 
                                   description= 'to query data on web')
 
 #parser.add_argument('url', help='url of web')
 parser.add_argument('-c', help="token to query" )
+parser.add_argument('-s', help="stock to query")
 
 time_now = time.ctime()
 
@@ -48,7 +51,17 @@ def query_coin(token):
     f.close
     return data
 
-
+def query_stock(stock):
+    data = vnstock.price_board(stock).get("Giá Khớp Lệnh").to_json()
+    to_dict = json.loads(data)
+    to_dict["stock_{}".format(stock)] = to_dict.pop("0")
+    to_dict["stock"] = stock
+    to_dict["Time"] = time_now
+    f_data = json.dumps(to_dict)
+    f = open ("/opt/selena/data-{}".format(stock), "w")
+    f.write(f_data)
+    f.close
+    return f_data
 
 def cut_data_gold():
     data = query_data('https://giavang.org/trong-nuoc/bao-tin-minh-chau/')
@@ -93,7 +106,11 @@ def send_telegram():
 if __name__ == "__main__":
   args = parser.parse_args()
  #  url = args.url
-  token = args.c
+  if args.c :
+    token = args.c
+    query_coin(token)
+  if args.s : 
+    query_stock(args.s)
    # send_telegram()
   #  cut_data_gold()
   query_coin(token)
