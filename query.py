@@ -46,7 +46,7 @@ def query_coin(token):
     data["price_{}".format(token)] = float(data["price_{}".format(token)])
     data = json.dumps(data)
     ##write it down
-    f = open ("/opt/selena/data-{}".format(token), "w")
+    f = open ("/opt/selena/data/data-{}".format(token), "w")
     f.write(data)
     f.close
     return data
@@ -58,7 +58,7 @@ def query_stock(stock):
     to_dict["stock"] = stock
     to_dict["Time"] = time_now
     f_data = json.dumps(to_dict)
-    f = open ("/opt/selena/data-{}".format(stock), "w")
+    f = open ("/opt/selena/data/data-{}".format(stock), "w")
     f.write(f_data)
     f.close
     return f_data

@@ -15,36 +15,18 @@ parser.add_argument('url', help='url of web')
 time_now = time.ctime()
 
 def query_data(url):
-# Creating a buffer as the cURL is not allocating a buffer for the network response
     buffer = BytesIO()
     c = pycurl.Curl()
-#initializing the request URL
     c.setopt(c.URL, url)
-#setting options for cURL transfer  
     c.setopt(c.WRITEDATA, buffer)
-#setting the file name holding the certificates
     c.setopt(c.CAINFO, certifi.where())
-# perform file transfer
     c.perform()
-#Ending the session and freeing the resources
     c.close()
 
     body = buffer.getvalue().decode('utf8')
-# convert to json:
+
     body_to_json = html_to_json.convert(body)
     return body_to_json
-
-def query_btc():
-    key = "https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT"
-    data = requests.get(key)  
-    data = data.json()
-    data['Time'] = time_now
-    data['price_btc'] = data.pop('price')
-    data['price_btc'] = float(data['price_btc'])
-    data = json.dumps(data)
-    print (data)
-    return data
-
 
 
 def cut_data_gold():
@@ -68,7 +50,7 @@ def cut_data_gold():
 
     final_data = json.dumps(final_data)
     ## write to file
-    f = open ("data-gold", "w")
+    f = open ("/opt/selena/data/data-gold", "w")
     f.write(final_data)
     f.close
     return final_data
