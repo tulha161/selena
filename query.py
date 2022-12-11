@@ -43,7 +43,7 @@ def query_coin(token):
     data["price_{}".format(token)] = float(data["price_{}".format(token)])
     data = json.dumps(data)
     ##write it down
-    f = open ("data-{}".format(token), "w")
+    f = open ("/opt/selena/data-{}".format(token), "w")
     f.write(data)
     f.close
     return data
