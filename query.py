@@ -7,6 +7,10 @@ import requests
 import time
 import json
 import vnstock
+from common import config
+
+CONF = config.load_config("config.ini")
+top_coin = CONF['Coin']['top']
 
 parser = argparse.ArgumentParser( prog = 'query_data' , 
                                   description= 'to query data on web')
@@ -38,7 +42,18 @@ def query_data(url):
     body_to_json = html_to_json.convert(body)
     return body_to_json
 
-def query_coin(token):
+def list_all_pair(pair):
+    # list all symbol with pair 
+    url = "https://api.binance.com/api/v3/ticker/bookTicker"
+    resp = requests.get(url)
+    tickers_list = json.loads(resp.content)
+    symbols  = []
+    for ticker in tickers_list :
+        if str(ticker['symbol'])[-len(pair):] == pair :
+            symbols.append(ticker['symbol'])
+    return symbols
+
+def query_coin(symbols):
     key = "https://api.binance.com/api/v3/ticker/price?symbol={}USDT".format(token.upper())
     data = requests.get(key)  
     data = data.json()
