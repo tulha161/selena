@@ -14,6 +14,7 @@ parser = argparse.ArgumentParser( prog = 'query_data' ,
 #parser.add_argument('url', help='url of web')
 parser.add_argument('-c', help="token to query" )
 parser.add_argument('-s', help="stock to query")
+parser.add_argument('-t', help="ID to send telegram report ")
 
 time_now = time.ctime()
 
@@ -88,17 +89,17 @@ def cut_data_gold():
 
 
 
-def send_telegram():
+def send_telegram(data,t):
    # data_gold = cut_data_gold()
-    data_btc = query_btc()
+    
 
     apiToken = '5767026483:AAEBA1e1EHJg06tEZXdrTKJxhCHvDY9JMeQ'
-    chatID = '705864115'
+    chatID = t
     apiURL = f'https://api.telegram.org/bot{apiToken}/sendMessage'
     try:
    #     response = requests.post(apiURL, json={'chat_id': chatID, 'text': data_gold})
-        response = requests.post(apiURL, json={'chat_id': chatID, 'text': data_btc})
-        
+        response = requests.post(apiURL, json={'chat_id': chatID, 'text': data})
+
     except Exception as e:
         print(e)
 
@@ -108,8 +109,14 @@ if __name__ == "__main__":
  #  url = args.url
   if args.c :
     token = args.c
-    query_coin(token)
+    data = query_coin(token)
+    if args.c and args.t :
+        send_telegram(data,args.t)
   if args.s : 
-    query_stock(args.s)
+    data = query_stock(args.s)
+    if args.s and args.t :
+        send_telegram(data,args.t)
+
+
    # send_telegram()
   #  cut_data_gold()
