@@ -50,7 +50,7 @@ def cut_data_gold():
 
     final_data = json.dumps(final_data)
     ## write to file
-    f = open ("/opt/selena/data/data-gold", "w")
+    f = open ("/opt/data/data-gold", "w")
     f.write(final_data)
     f.close
     return final_data
