@@ -10,7 +10,7 @@ import vnstock
 from common import config
 
 CONF = config.load_config("config.ini")
-top_coin = CONF['Coin']['top']
+#top_coin = CONF['Coin']['top']
 
 parser = argparse.ArgumentParser( prog = 'query_data' , 
                                   description= 'to query data on web')
@@ -53,26 +53,31 @@ def list_all_pair(pair):
             symbols.append(ticker['symbol'])
     return symbols
 
-def query_coin(symbols):
-    key = "https://api.binance.com/api/v3/ticker/price?symbol={}USDT".format(token.upper())
+def query_coin(token):
+    key = "https://api.binance.com/api/v3/ticker/price?symbol={}".format(token.upper())
     data = requests.get(key)  
     data = data.json()
     data['Time'] = time_now
-    data["price_{}".format(token)] = data.pop('price')
-    data["price_{}".format(token)] = float(data["price_{}".format(token)])
+    #data["price_{}".format(token)] = data.pop('price')
+    #data["price_{}".format(token)] = float(data["price_{}".format(token)])
+    data["price"] = float(data["price"])
+    data["type"] = "coin"
     data = json.dumps(data)
     ##write it down
     f = open ("/opt/selena/data/data-coin-{}".format(token), "w")
     f.write(data)
     f.close
+    
     return data
 
 def query_stock(stock):
     data = vnstock.price_board(stock).get("Giá Khớp Lệnh").to_json()
     to_dict = json.loads(data)
-    to_dict["stock_{}".format(stock)] = to_dict.pop("0")
+    #to_dict["stock_{}".format(stock)] = to_dict.pop("0")
+    to_dict["price"] = to_dict.pop("0")
     to_dict["stock"] = stock
     to_dict["Time"] = time_now
+    to_dict["type"] = "stock"
     f_data = json.dumps(to_dict)
     f = open ("/opt/selena/data/data-stock-{}".format(stock), "w")
     f.write(f_data)
@@ -132,6 +137,9 @@ if __name__ == "__main__":
     if args.s and args.t :
         send_telegram(data,args.t)
 
-
+  else : 
+    for i in list_all_pair("USDT"):
+        print (i)
+        query_coin(i) 
    # send_telegram()
   #  cut_data_gold()
