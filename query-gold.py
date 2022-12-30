@@ -46,7 +46,7 @@ def cut_data_gold():
     jsc_name = jsc[0]['_value']
     final_data["Vang_mieng" + "_buy"] = float(jsc[1]['_value'])
     final_data["Vang_mieng" + "_sell"] = float(jsc[2]['_value'])
-
+    final_data["type"] = 'gold'
 
     final_data = json.dumps(final_data)
     ## write to file

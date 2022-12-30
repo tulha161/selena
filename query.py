@@ -65,7 +65,7 @@ def query_stock(stock):
     to_dict = json.loads(data)
     #to_dict["stock_{}".format(stock)] = to_dict.pop("0")
     to_dict["price"] = to_dict.pop("0")
-    to_dict["stock"] = stock
+    to_dict["symbol"] = stock
     to_dict["Time"] = time_now
     to_dict["type"] = "stock"
     f_data = json.dumps(to_dict)
