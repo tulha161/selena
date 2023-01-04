@@ -64,15 +64,18 @@ def query_stock(stock):
     data = vnstock.price_board(stock).get("Giá Khớp Lệnh").to_json()
     to_dict = json.loads(data)
     #to_dict["stock_{}".format(stock)] = to_dict.pop("0")
-    to_dict["price"] = to_dict.pop("0")
-    to_dict["symbol"] = stock
-    to_dict["Time"] = time_now
-    to_dict["type"] = "stock"
-    f_data = json.dumps(to_dict)
-    f = open ("/opt/data/data-stock-{}".format(stock), "w")
-    f.write(f_data)
-    f.close
-    return f_data
+    if to_dict['0'] is not None :
+        to_dict["price"] = to_dict.pop("0")
+        to_dict["symbol"] = stock
+        to_dict["Time"] = time_now
+        to_dict["type"] = "stock"
+        f_data = json.dumps(to_dict)
+        f = open ("/opt/data/data-stock-{}".format(stock), "w")
+        f.write(f_data)
+        f.close
+        return f_data
+    else : 
+        print ("None data, not collect anything")
 
 
 

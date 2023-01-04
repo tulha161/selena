@@ -11,18 +11,16 @@ selena_report_group = config.load_config("/opt/selena/config.ini")['telegram']['
 time_now = int(time.time())
 url = "http://selena.asia:8428"
 
-def query_price(data):
+def query_price(_type,symbol):
     
-    query_format = "selena_price"
+    query_format = 'selena_price{type="%s",symbol="%s"}' %(_type,symbol) 
     params = { "query" : query_format ,
                 "time" : time_now
     } 
     query = url + "/api/v1/query" 
     
-    all_result = requests.get(query,params).json()
-    for i in all_result['data']['result']:
-        if i['metric']['symbol'] == data : 
-            return int(i['value'][1])
+    result = requests.get(query,params).json()
+    return float(result['data']['result'][0]['value'][1])
 
 def query_gold_price(data):
     query_format = "selena_" + data
@@ -43,7 +41,7 @@ def calculator():
     for i in portfolio :
         i_dict = {}
         num = int(portfolio[i])
-        price = query_price(i)
+        price = query_price('stock',i)
         sum = price * num
         i_dict['Stock_name'] = i
         i_dict['Khoi_Luong'] = num
